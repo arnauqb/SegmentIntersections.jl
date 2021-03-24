@@ -1,6 +1,9 @@
-export enqueue!, PriorityQueue, peek
+export EventQueue
 
-import DataStructures: PriorityQueue, enqueue!, peek
+#import DataStructures: PriorityQueue, enqueue!, peek
+using DataStructures
 
-enqueue!(Q::PriorityQueue, p::Point) = enqueue!(Q, p, p)
+#enqueue!(Q::PriorityQueue, p::Point) = enqueue!(Q, p, p)
+
+EventQueue() = AVLTree{Event}()
 

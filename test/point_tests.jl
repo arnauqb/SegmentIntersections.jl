@@ -17,19 +17,19 @@ end
     @testset "Test different y" begin
         p = Point(1,2)
         q = Point(3,4)
-        @test (q < p) == true
-        @test (q <= p) == true
-        @test (q > p) == false
-        @test (q >= p) == false
-        @test (q == p) == false
+        @test q < p
+        @test q <= p
+        @test !(q > p)
+        @test !(q >= p)
+        @test !(q == p)
     end
     @testset "Test same y" begin
         p = Point(1,2)
         q = Point(3,2)
-        @test (q < p) == false 
-        @test (q <= p) == false 
-        @test (q > p) == true
-        @test (q >= p) == true
-        @test (q == p) == false
+        @test !(q < p) 
+        @test !(q <= p)
+        @test (q > p)
+        @test (q >= p)
+        @test !(q == p)
     end
 end
