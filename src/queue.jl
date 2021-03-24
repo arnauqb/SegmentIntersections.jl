@@ -1,9 +1,8 @@
+import Base: insert!
 export EventQueue, insert!, fetch!
 using DataStructures
 
 EventQueue() = AVLTree{Event}()
-
-insert!(Q::AVLTree{Event}, e::Event) = push!(Q, e)
 
 function fetch!(Q::AVLTree{Event})
     e = Q[1]
