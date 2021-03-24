@@ -1,9 +1,14 @@
-export EventQueue
-
-#import DataStructures: PriorityQueue, enqueue!, peek
+export EventQueue, insert!, fetch!
 using DataStructures
 
-#enqueue!(Q::PriorityQueue, p::Point) = enqueue!(Q, p, p)
-
 EventQueue() = AVLTree{Event}()
+
+insert!(Q::AVLTree{Event}, e::Event) = push!(Q, e)
+
+function fetch!(Q::AVLTree{Event})
+    e = Q[1]
+    delete!(Q, e)
+    return e
+end
+
 
