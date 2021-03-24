@@ -1,5 +1,5 @@
 module BentleyOttmann
 
-greet() = print("Hello World!")
+include("point.jl")
 
 end # module
