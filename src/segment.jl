@@ -78,9 +78,9 @@ function Base.intersect!(
     b::Vector{T},
     tol=1e-9
 ) where {T<:AbstractFloat}
-    #if is_singular(s1) || is_singular(s2)
-    #    return false, Point(0.0, 0.0)
-    #end
+    if is_singular(s1) || is_singular(s2)
+        return false, Point(0.0, 0.0)
+    end
     if trivial_miss(s1, s2)
         return false, Point(0.0, 0.0)
     end
