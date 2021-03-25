@@ -1,4 +1,18 @@
-export handle_event_point
+export find_intersections
+
+function find_intersections(segments::Vector{Segment{T}}; tol=1e-9) where {T<:AbstractFloat}
+    Q = EventQueue(segments)
+    y0 = Q.tree[1].y
+    ys = [y0]
+    status = Status(y0, tol)
+    intersections = []
+    while length(Q) != 0
+        event = fetch_event!(Q)
+        handle_event_point(Q, event, status, intersections)
+    end
+    return intersections
+end
+
 function handle_event_point(
     Q::EventQueue,
     event::Event,

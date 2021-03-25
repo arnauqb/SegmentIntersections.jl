@@ -6,5 +6,6 @@ include("queue.jl")
 include("event.jl")
 include("status.jl")
 include("algorithm.jl")
+include("brute.jl")
 
 end 

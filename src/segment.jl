@@ -1,4 +1,3 @@
-import Base: intersect!
 export Segment,
     Segments,
     intersect!,
@@ -22,6 +21,8 @@ struct Segment{T<:Float64}
         return new{T}(p, q, slope)
     end
 end
+
+Base.isless(s::Segment, t::Segment) = (p.y > q.y) | ((p.y == q.y) & (p.x < q.x))
 
 function Base.print(io::IO, segment::Segment)
     println("px $(segment.p.x) \t qx $(segment.q.x)")
@@ -50,12 +51,15 @@ end
 """
 Checks for the intersection of two segments s1, s2.
 """
-function intersect!(s1::Segment, s2::Segment)
+function Base.intersect!(
+    s1::Segment{T},
+    s2::Segment{T},
+    A::Matrix{T},
+    b::Vector{T},
+) where {T<:AbstractFloat}
     if is_singular(s1) || is_singular(s2)
         return false
     end
-    A = zeros((2, 2))
-    b = zeros(2)
     A[1, 1] = s1.q.x - s1.p.x
     A[1, 2] = s2.p.x - s2.q.x
     A[2, 1] = s1.q.y - s1.p.y
@@ -70,6 +74,12 @@ function intersect!(s1::Segment, s2::Segment)
     else
         return false, Point(0.0, 0.0)
     end
+end
+
+function Base.intersect!(s1::Segment{T}, s2::Segment{T}) where {T<:AbstractFloat}
+    A = zeros((2, 2))
+    b = zeros(2)
+    return intersect!(s1, s2, A, b)
 end
 
 is_lower_end(segment::Segment, Point::Point) = (segment.q == Point)

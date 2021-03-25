@@ -7,7 +7,7 @@ mutable struct Status{T <: AbstractFloat}
     tol::T
 end
 
-Status(y0, tol=1e-20) = Status(SortedDict{Float64, Segment{Float64}}(), y0, tol)
+Status(y0, tol=1e-9) = Status(SortedDict{Float64, Segment{Float64}}(), y0, tol)
 
 function insert!(status::Status, segment::Segment)
     y = status.y_sweep - status.tol
