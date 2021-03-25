@@ -3,7 +3,6 @@ function handle_event_point(
     Q::EventQueue,
     event::Event,
     status::Status,
-    #metric::Metric,
     intersections,
 )
     p = event.point
@@ -26,14 +25,9 @@ function handle_event_point(
     for segment in CL
         delete!(status, segment)
     end
-    #segments = Set([segment for segment in status.segments if segment ∉ UL])
     UC = union(U, C)
     update!(status, UC)
-    #for segment in UC
-    #    insert!(status, segment)
-    #end
     if length(UC) == 0
-        #rank = sorted_rank(status.tree, p)
         sl = find_left(status, p)
         sr = find_right(status, p)
         find_new_event(Q, sl, sr, p)

@@ -1,4 +1,4 @@
-export Status, find_left, find_right
+export Status, find_left, find_right, insert!, update!, delete!
 using DataStructures
 
 mutable struct Status{T <: AbstractFloat}
@@ -7,7 +7,7 @@ mutable struct Status{T <: AbstractFloat}
     tol::T
 end
 
-Status(y0, tol=1e-10) = Status(SortedDict{Float64, Segment{Float64}}(), y0, tol)
+Status(y0, tol=1e-20) = Status(SortedDict{Float64, Segment{Float64}}(), y0, tol)
 
 function insert!(status::Status, segment::Segment)
     y = status.y_sweep - status.tol
@@ -16,7 +16,7 @@ function insert!(status::Status, segment::Segment)
 end
 
 function update!(status::Status, segment_set)
-    y = status.y_sweep - 1e-20 #status.tol
+    y = status.y_sweep - status.tol
     dict = SortedDict{Float64, Segment{Float64}}()
     for segment in union(segment_set, Set(values(status.dict)))
         dict[get_x(segment, y)] = segment
@@ -33,20 +33,15 @@ function delete!(status::Status, segment::Segment)
     end
 end
 
-
 function find_left(status::Status, point::Point)
-    x = point.x - 1e-6
-    #y = status.y_sweep - status.tol
-    #x = get_x(segment, y)
+    x = point.x - status.tol
     (length(status.dict) == 0) && return nothing
     (x < first(status.dict).first) && return nothing
     return status.dict[searchsortedlast(status.dict, x)]
 end
 
 function find_right(status::Status, point::Point)
-    x = point.x + 1e-6
-    #y = status.y_sweep - status.tol
-    #x = get_x(segment, y)
+    x = point.x + status.tol
     (length(status.dict) == 0) && return nothing
     (x > last(status.dict).first) && return nothing
     return status.dict[searchsortedfirst(status.dict, x)]

@@ -1,5 +1,13 @@
 import Base: intersect!
-export Segment, Segments, intersect!, is_lower_end, contains, find_leftmost, find_rightmost
+export Segment,
+    Segments,
+    intersect!,
+    is_lower_end,
+    is_upper_end,
+    contains,
+    find_leftmost,
+    find_rightmost,
+    contains
 
 
 struct Segment{T<:Float64}
@@ -46,7 +54,7 @@ function intersect!(s1::Segment, s2::Segment)
     if is_singular(s1) || is_singular(s2)
         return false
     end
-    A = zeros((2,2))
+    A = zeros((2, 2))
     b = zeros(2)
     A[1, 1] = s1.q.x - s1.p.x
     A[1, 2] = s2.p.x - s2.q.x
@@ -65,9 +73,14 @@ function intersect!(s1::Segment, s2::Segment)
 end
 
 is_lower_end(segment::Segment, Point::Point) = (segment.q == Point)
-function contains(segment::Segment, point::Point)
+is_upper_end(segment::Segment, Point::Point) = (segment.p == Point)
+function Base.contains(segment::Segment, point::Point)
+    if is_lower_end(segment, point) | is_upper_end(segment, point)
+        return false
+    end
     y = get_y(segment, point.x)
-    if y ≈ point.y rtol=1e-6
+    if y ≈ point.y
+        rtol = 1e-6
         return true
     else
         return false
@@ -78,8 +91,8 @@ function find_leftmost(segment_set, y)
     ret = nothing
     xmin = Inf
     for segment in segment_set
-        x = get_x(segment, y-1e-20)
-        if x < xmin 
+        x = get_x(segment, y - 1e-20)
+        if x < xmin
             xmin = x
             ret = segment
         end
@@ -91,8 +104,8 @@ function find_rightmost(segment_set, y)
     ret = nothing
     xmax = 0
     for segment in segment_set
-        x = get_x(segment, y-1e-20)
-        if x > xmax 
+        x = get_x(segment, y - 1e-20)
+        if x > xmax
             xmax = x
             ret = segment
         end
