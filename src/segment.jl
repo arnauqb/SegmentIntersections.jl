@@ -61,7 +61,7 @@ function trivial_miss(s1::Segment, s2::Segment)
         return true
     elseif max_y(s1) < min_y(s2)
         return true
-    elseif max_y(s2) < min_y(s2)
+    elseif max_y(s2) < min_y(s1)
         return true
     end
     return false
