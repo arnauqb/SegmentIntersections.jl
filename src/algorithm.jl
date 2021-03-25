@@ -3,20 +3,19 @@ function handle_event_point(
     Q::EventQueue,
     event::Event,
     status::Status,
+    #metric::Metric,
     intersections,
 )
     p = event.point
+    status.y_sweep = p.y
     U = event.segments
     L = Set{Segment}()
     C = Set{Segment}()
-    for segment_set in values(status.segments)
-        for segment in segment_set
-            if is_lower_end(segment, p)
-                push!(L, segment)
-            else
-                contains(segment, p)
-                push!(C, segment)
-            end
+    for (key, segment) in status.dict
+        if is_lower_end(segment, p)
+            push!(L, segment)
+        elseif contains(segment, p)
+            push!(C, segment)
         end
     end
     CL = union(C, L)
@@ -29,9 +28,10 @@ function handle_event_point(
     end
     #segments = Set([segment for segment in status.segments if segment ∉ UL])
     UC = union(U, C)
-    for segment in UC
-        insert!(status, segment, p)
-    end
+    update!(status, UC)
+    #for segment in UC
+    #    insert!(status, segment)
+    #end
     if length(UC) == 0
         #rank = sorted_rank(status.tree, p)
         sl = find_left(status, p)
@@ -50,10 +50,14 @@ end
 
 
 function find_new_event(Q::EventQueue, s1::Segment, s2::Segment, p::Point)
+    if s1 == s2
+        return
+    end
     do_intersect, intersection = intersect!(s1, s2)
     if do_intersect
-        if (intersection.y < p.y | ((intersection.y == p.y) | (intersection.x > p.x)))
-            push!(Q.tree, intersection)
+        if ((intersection.y < p.y) | ((intersection.y == p.y) & (intersection.x > p.x)))
+            println("Found intersection!")
+            insert!(Q, intersection)
         end
     end
 end

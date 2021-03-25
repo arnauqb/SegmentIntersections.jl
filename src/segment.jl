@@ -1,11 +1,11 @@
 import Base: intersect!
 export Segment, Segments, intersect!, is_lower_end, contains, find_leftmost, find_rightmost
 
+
 struct Segment{T<:Float64}
     p::Point{T}
     q::Point{T}
     slope::T
-    sweep_y::T
     function Segment(p::Point{T}, q::Point{T}) where {T<:Float64}
         if p > q
             p, q = q, p
@@ -15,11 +15,16 @@ struct Segment{T<:Float64}
     end
 end
 
+function Base.print(io::IO, segment::Segment)
+    println("px $(segment.p.x) \t qx $(segment.q.x)")
+    println("py $(segment.p.y) \t qy $(segment.q.y)")
+end
+
 
 get_x(segment::Segment, y) = segment.p.x + segment.slope * (y - segment.p.y)
 get_y(segment::Segment, x) = segment.p.y + (x - segment.p.x) / segment.slope
 
-Base.isless(s::Segment, t::Segment) = get_x(s, s.sweep_y) < get_x(t, t.sweep_y)
+#Base.isless(s::Segment, t::Segment) = get_x(s, s.metric.sweep_y) < get_x(t, t.metric.sweep_y)
 
 Segment(px, py, qx, qy) = Segment(Point(px, py), Point(qx, qy))
 
@@ -52,21 +57,20 @@ function intersect!(s1::Segment, s2::Segment)
     sol = A \ b
     if (0 < sol[1] < 1) && (0 < sol[2] < 1)
         intersection =
-            Point(s1.p.x + sol[1] * (s1.q.x - s1.p.x), s1.p.y + sol[2] * (s1.q.y - s1.p.y))
+            Point(s1.p.x + sol[1] * (s1.q.x - s1.p.x), s1.p.y + sol[1] * (s1.q.y - s1.p.y))
         return true, intersection
     else
         return false, Point(0.0, 0.0)
     end
 end
 
-is_lower_end(segment::Segment, Point::Point) = segment.q == Point
+is_lower_end(segment::Segment, Point::Point) = (segment.q == Point)
 function contains(segment::Segment, point::Point)
     y = get_y(segment, point.x)
-    # Segments are guaranteed to be down going always
-    if (y > segment.p.y) | (y < segment.q.y)
-        return false
-    else
+    if y ≈ point.y rtol=1e-6
         return true
+    else
+        return false
     end
 end
 
@@ -74,7 +78,7 @@ function find_leftmost(segment_set, y)
     ret = nothing
     xmin = Inf
     for segment in segment_set
-        x = get_x(segment, y)
+        x = get_x(segment, y-1e-20)
         if x < xmin 
             xmin = x
             ret = segment
@@ -87,7 +91,7 @@ function find_rightmost(segment_set, y)
     ret = nothing
     xmax = 0
     for segment in segment_set
-        x = get_x(segment, y)
+        x = get_x(segment, y-1e-20)
         if x > xmax 
             xmax = x
             ret = segment

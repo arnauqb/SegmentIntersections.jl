@@ -27,7 +27,13 @@ function insert!(Q::EventQueue, segment::Segment)
     end
     if q ∉ Q.tree
         push!(Q.tree, q)
-        #Q.segments[q] = Segment[] # we only store for the upper
+        Q.segments[q] = Set(Segment[]) # we only store for the upper
+    end
+end
+
+function insert!(Q::EventQueue, p::Point)
+    if p ∉ Q.tree
+        push!(Q.tree, p)
     end
 end
 
@@ -42,7 +48,11 @@ end
 
 function fetch_event!(Q::EventQueue)
     p = Q.tree[1]
-    segments = Q.segments[p]
+    if p in keys(Q.segments)
+        segments = Q.segments[p]
+    else
+        segments = Set{Segment{Float64}}()
+    end
     delete!(Q, p)
     return Event(p, segments)
 end
