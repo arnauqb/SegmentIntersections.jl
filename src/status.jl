@@ -33,15 +33,15 @@ function delete!(status::Status, segment::Segment)
     end
 end
 
-function find_left(status::Status, point::Point)
-    x = point.x - status.tol
+function find_left(status::Status, x)
+    x -= 1e-5 
     (length(status.dict) == 0) && return nothing
     (x < first(status.dict).first) && return nothing
     return status.dict[searchsortedlast(status.dict, x)]
 end
 
-function find_right(status::Status, point::Point)
-    x = point.x + status.tol
+function find_right(status::Status, x)
+    x += 1e-5 
     (length(status.dict) == 0) && return nothing
     (x > last(status.dict).first) && return nothing
     return status.dict[searchsortedfirst(status.dict, x)]

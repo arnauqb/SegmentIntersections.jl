@@ -28,15 +28,15 @@ function handle_event_point(
     UC = union(U, C)
     update!(status, UC)
     if length(UC) == 0
-        sl = find_left(status, p)
-        sr = find_right(status, p)
+        sl = find_left(status, p.x)
+        sr = find_right(status, p.x)
         find_new_event(Q, sl, sr, p)
     else
-        sp = find_leftmost(UC, p.y)
-        sl = find_left(status, sp.p)
+        sp, xp = find_leftmost(UC, p.y, status.tol)
+        sl = find_left(status, xp)
         find_new_event(Q, sl, sp, p)
-        spp = find_rightmost(UC, p.y)
-        sr = find_right(status, spp.p)
+        spp, xpp = find_rightmost(UC, p.y, status.tol)
+        sr = find_right(status, xpp)
         find_new_event(Q, spp, sr, p)
     end
     return
@@ -50,7 +50,6 @@ function find_new_event(Q::EventQueue, s1::Segment, s2::Segment, p::Point)
     do_intersect, intersection = intersect!(s1, s2)
     if do_intersect
         if ((intersection.y < p.y) | ((intersection.y == p.y) & (intersection.x > p.x)))
-            println("Found intersection!")
             insert!(Q, intersection)
         end
     end

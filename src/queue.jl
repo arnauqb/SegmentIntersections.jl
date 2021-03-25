@@ -37,7 +37,7 @@ function insert!(Q::EventQueue, p::Point)
     end
 end
 
-function EventQueue(segments::Vector{Segment})
+function EventQueue(segments::Vector{Segment{T}}) where {T<:AbstractFloat}
     Q = EventQueue()
     for segment in segments
         insert!(Q, segment)

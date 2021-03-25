@@ -87,28 +87,28 @@ function Base.contains(segment::Segment, point::Point)
     end
 end
 
-function find_leftmost(segment_set, y)
+function find_leftmost(segment_set, y, tol)
     ret = nothing
     xmin = Inf
     for segment in segment_set
-        x = get_x(segment, y - 1e-20)
+        x = get_x(segment, y - tol)
         if x < xmin
             xmin = x
             ret = segment
         end
     end
-    return ret
+    return ret, xmin
 end
 
-function find_rightmost(segment_set, y)
+function find_rightmost(segment_set, y, tol)
     ret = nothing
     xmax = 0
     for segment in segment_set
-        x = get_x(segment, y - 1e-20)
+        x = get_x(segment, y - tol)
         if x > xmax
             xmax = x
             ret = segment
         end
     end
-    return ret
+    return ret, xmax
 end
