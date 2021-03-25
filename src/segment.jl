@@ -1,4 +1,3 @@
-using LinearAlgebra
 export Segment,
     Segments,
     intersect!,
