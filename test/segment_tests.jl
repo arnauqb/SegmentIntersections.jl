@@ -6,6 +6,15 @@ using Test, SegmentIntersections
     @test s1.q == Point(1,2)
 end
 
+@testset "Test segment order" begin
+    s1 = Segment(1,2,3,4)
+    s2 = Segment(1,5,3,4)
+    @test s2 < s1
+    s1 = Segment(3,5,3,4)
+    s2 = Segment(1,5,3,4)
+    @test s2 < s1
+end
+
 @testset "Test singular segment" begin
     s = Segment(1, 2, 1, 4)
     @test is_singular(s) == true 

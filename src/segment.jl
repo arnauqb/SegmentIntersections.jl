@@ -23,7 +23,7 @@ struct Segment{T<:Float64}
     end
 end
 
-Base.isless(s::Segment, t::Segment) = (p.y > q.y) | ((p.y == q.y) & (p.x < q.x))
+Base.isless(s::Segment, t::Segment) = (s.p.y > t.q.y) | ((s.p.y == t.p.y) && (s.p.x < t.p.x))
 Base.:(==)(s::Segment, t::Segment) = (s.p == t.p) && (s.q == t.q)
 
 get_x(segment::Segment, y) = segment.p.x + segment.slope * (y - segment.p.y)
