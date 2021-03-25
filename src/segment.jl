@@ -58,7 +58,7 @@ function Base.intersect!(
     b::Vector{T},
 ) where {T<:AbstractFloat}
     if is_singular(s1) || is_singular(s2)
-        return false
+        return false, Point(0.0, 0.0)
     end
     A[1, 1] = s1.q.x - s1.p.x
     A[1, 2] = s2.p.x - s2.q.x

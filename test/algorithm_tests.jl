@@ -6,9 +6,9 @@ using Test, BentleyOttmann
     for datap in eachrow(random_data)
         push!(segments, Segment(datap...))
     end
-    @time bo_intersections = find_intersections(segments)
-    @time brute_intersections = find_intersections_brute(segments)
-    println("brute finished")
+    bo_intersections = find_intersections(segments)
+    brute_intersections = find_intersections_brute(segments)
+    @test length(bo_intersections) == length(brute_intersections)
     for expected in brute_intersections 
         match = false
         for intersection in bo_intersections 

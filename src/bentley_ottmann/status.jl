@@ -15,22 +15,18 @@ function insert!(status::Status, segment::Segment)
     status.dict[x] = segment
 end
 
-function update!(status::Status, segment_set)
+function update!(status::Status; insert, delete)
     y = status.y_sweep - status.tol
-    dict = SortedDict{Float64, Segment{Float64}}()
-    for segment in union(segment_set, Set(values(status.dict)))
-        dict[get_x(segment, y)] = segment
-    end
-    status.dict = dict
-end
-
-function delete!(status::Status, segment::Segment) 
-    for key in keys(status.dict)
-        if status.dict[key] == segment
-            delete!(status.dict, key)
-            return
+    new_dict = SortedDict{Float64, Segment{Float64}}()
+    for (key, segment) in status.dict
+        if segment ∉ delete
+            new_dict[get_x(segment, y)] = segment
         end
     end
+    for segment in insert 
+        new_dict[get_x(segment, y)] = segment
+    end
+    status.dict = new_dict
 end
 
 function find_left(status::Status, x)

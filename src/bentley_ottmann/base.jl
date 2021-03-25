@@ -1,5 +1,20 @@
 export find_intersections
 
+"""
+    find_intersections(segments::Vector{Segment{T}}; tol=1e-9) where {T<:AbstractFloat}
+
+Compute all the intersections between the segments using the Bentley-Ottmann algorithm.
+
+Seting a tolerance value to work for all situations is tricky, so try to play with it if you
+are finding that not all intersections are found.
+
+# Examples
+```jldoctest
+julia> segments = [Segment(0,0,5,5), Segment(0,5,5,0)];
+julia> intersections = find_intersections(segments)
+julia> [Point(2.5, 2.5)]
+```
+"""
 function find_intersections(segments::Vector{Segment{T}}; tol=1e-9) where {T<:AbstractFloat}
     Q = EventQueue(segments)
     y0 = Q.tree[1].y
@@ -36,11 +51,8 @@ function handle_event_point(
     if length(total) > 1
         push!(intersections, p)
     end
-    for segment in CL
-        delete!(status, segment)
-    end
     UC = union(U, C)
-    update!(status, UC)
+    update!(status, insert=UC, delete=CL)
     if length(UC) == 0
         sl = find_left(status, p.x)
         sr = find_right(status, p.x)

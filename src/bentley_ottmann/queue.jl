@@ -8,6 +8,7 @@ struct EventQueue{T}
 end
 
 length(Q::EventQueue) = length(Q.tree)
+
 function delete!(Q::EventQueue, p::Point)
     delete!(Q.tree, p)
     delete!(Q.segments, p)
