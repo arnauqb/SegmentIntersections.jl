@@ -6,6 +6,15 @@ using Test, SegmentIntersections
     @test s1.q == Point(1,2)
 end
 
+@testset "Test singular segment" begin
+    s = Segment(1, 2, 1, 4)
+    @test is_singular(s) == true 
+    s = Segment(3, 2, 3, 2)
+    @test is_singular(s) == true 
+    s = Segment(1, 2, 3, 4)
+    @test is_singular(s) == false
+end
+
 @testset "Test segment intersection" begin
     # do intersect
     segment1 = Segment(2.3, 7.99, 10.64, 3.93)
@@ -17,6 +26,12 @@ end
     # don't intersect
     segment1 = Segment(5, -2, 9.4, -2.79)
     segment2 = Segment(4.82, -5.83, 7.2, -3.41)
+    do_intersect, intersection = intersect!(segment1, segment2)
+    @test do_intersect == false
+    @test intersection == Point(0.0, 0.0)
+    # ignore singular 
+    segment1 = Segment(1, 2, 1, 4)
+    segment2 = Segment(1, 2, 3, 4)
     do_intersect, intersection = intersect!(segment1, segment2)
     @test do_intersect == false
     @test intersection == Point(0.0, 0.0)

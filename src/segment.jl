@@ -6,7 +6,8 @@ export Segment,
     contains,
     find_leftmost,
     find_rightmost,
-    contains
+    contains,
+    is_singular
 
 
 struct Segment{T<:Float64}
@@ -24,12 +25,6 @@ end
 
 Base.isless(s::Segment, t::Segment) = (p.y > q.y) | ((p.y == q.y) & (p.x < q.x))
 Base.:(==)(s::Segment, t::Segment) = (s.p == t.p) && (s.q == t.q)
-
-function Base.print(io::IO, segment::Segment)
-    println("px $(segment.p.x) \t qx $(segment.q.x)")
-    println("py $(segment.p.y) \t qy $(segment.q.y)")
-end
-
 
 get_x(segment::Segment, y) = segment.p.x + segment.slope * (y - segment.p.y)
 get_y(segment::Segment, x) = segment.p.y + (x - segment.p.x) / segment.slope
