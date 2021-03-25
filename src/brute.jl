@@ -23,7 +23,6 @@ function find_intersections_brute(segments::Vector{Segment{T}}) where {T<:Abstra
     for i = 1:(n_segments-1)
         s1 = segments[i]
         for j = (i+1):n_segments
-            (i == j) && (continue)
             s2 = segments[j]
             do_intersect, intersection = intersect!(s1, s2, A, b)
             if do_intersect

@@ -6,6 +6,14 @@ using Test, SegmentIntersections
     @test s1.q == Point(1,2)
 end
 
+@testset "Test min max segment" begin
+    s = Segment(1,2,3,4)
+    @test min_x(s) == 1
+    @test min_y(s) == 2
+    @test max_x(s) == 3
+    @test max_y(s) == 4
+end
+
 @testset "Test segment order" begin
     s1 = Segment(1,2,3,4)
     s2 = Segment(1,5,3,4)
@@ -24,7 +32,31 @@ end
     @test is_singular(s) == false
 end
 
+@testset "Test trivial misses" begin
+    s1 = Segment(0,0,1,1)
+    s2 = Segment(0,0,2,2)
+    @test trivial_miss(s1, s2) == true
+    s1 = Segment(1,2,3,4)
+    s2 = Segment(4,2,5,4)
+    @test trivial_miss(s1, s2) == true
+    s2 = Segment(1,2,3,4)
+    s1 = Segment(4,2,5,4)
+    @test trivial_miss(s1, s2) == true
+    s1 = Segment(1,3,3,6)
+    s2 = Segment(4,7,5,8)
+    @test trivial_miss(s1, s2) == true
+    s2 = Segment(1,3,3,6)
+    s1 = Segment(4,7,5,8)
+    @test trivial_miss(s1, s2) == true
+end
+
 @testset "Test segment intersection" begin
+    # test trivial miss
+    segment1 = Segment(1,2,3,4)
+    segment2 = Segment(4,2,5,4)
+    do_intersect, intersection = intersect!(segment1, segment2)
+    @test do_intersect == false
+    @test intersection == Point(0.0, 0.0)
     # do intersect
     segment1 = Segment(2.3, 7.99, 10.64, 3.93)
     segment2 = Segment(2.86, 3.45, 11.0, 7.0)

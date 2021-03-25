@@ -42,7 +42,7 @@ function handle_event_point(
     for (key, segment) in status.dict
         if is_lower_end(segment, p)
             push!(L, segment)
-        elseif contains(segment, p)
+        elseif contains(segment, p, status.tol)
             push!(C, segment)
         end
     end
@@ -69,14 +69,18 @@ function handle_event_point(
 end
 
 
-function find_new_event(Q::EventQueue, s1::Segment, s2::Segment, p::Point)
+function find_new_event(Q::EventQueue, s1::Segment, s2::Segment, p::Point, tol=1e-9)
     if s1 == s2
         return
     end
     do_intersect, intersection = intersect!(s1, s2)
     if do_intersect
-        if ((intersection.y < p.y) | ((intersection.y == p.y) & (intersection.x > p.x)))
+        if intersection.y < p.y
             insert!(Q, intersection)
+        elseif (intersection.y ≈ p.y) && (intersection.x > p.x) 
+            insert!(Q, intersection)
+        else
+            return
         end
     end
 end
