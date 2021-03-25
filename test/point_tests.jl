@@ -1,4 +1,4 @@
-using BentleyOttmann, Test
+using SegmentIntersections, Test
 
 @testset "create point" begin
     p = Point(1,2)

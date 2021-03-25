@@ -23,6 +23,7 @@ struct Segment{T<:Float64}
 end
 
 Base.isless(s::Segment, t::Segment) = (p.y > q.y) | ((p.y == q.y) & (p.x < q.x))
+Base.:(==)(s::Segment, t::Segment) = (s.p == t.p) && (s.q == t.q)
 
 function Base.print(io::IO, segment::Segment)
     println("px $(segment.p.x) \t qx $(segment.q.x)")
@@ -32,8 +33,6 @@ end
 
 get_x(segment::Segment, y) = segment.p.x + segment.slope * (y - segment.p.y)
 get_y(segment::Segment, x) = segment.p.y + (x - segment.p.x) / segment.slope
-
-#Base.isless(s::Segment, t::Segment) = get_x(s, s.metric.sweep_y) < get_x(t, t.metric.sweep_y)
 
 Segment(px, py, qx, qy) = Segment(Point(px, py), Point(qx, qy))
 
@@ -97,7 +96,7 @@ function Base.contains(segment::Segment, point::Point)
     end
 end
 
-function find_leftmost(segment_set, y, tol)
+function find_leftmost(segment_set, y, tol=1e-9)
     ret = nothing
     xmin = Inf
     for segment in segment_set
@@ -110,7 +109,7 @@ function find_leftmost(segment_set, y, tol)
     return ret, xmin
 end
 
-function find_rightmost(segment_set, y, tol)
+function find_rightmost(segment_set, y, tol=1e-9)
     ret = nothing
     xmax = 0
     for segment in segment_set

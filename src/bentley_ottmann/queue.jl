@@ -4,7 +4,7 @@ using DataStructures
 
 struct EventQueue{T}
     tree::AVLTree{Point{T}}
-    segments::Dict{Point{T}, Set{Segment{T}}} # maps upper point -> list of segments
+    segments::Dict{Point{T},Set{Segment{T}}} # maps upper point -> list of segments
 end
 
 length(Q::EventQueue) = length(Q.tree)

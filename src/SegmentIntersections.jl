@@ -1,11 +1,11 @@
-module BentleyOttmann
+module SegmentIntersections
 
 include("point.jl")
 include("segment.jl")
-include("queue.jl")
-include("event.jl")
-include("status.jl")
-include("algorithm.jl")
+include("bentley_ottmann/queue.jl")
+include("bentley_ottmann/event.jl")
+include("bentley_ottmann/status.jl")
+include("bentley_ottmann/base.jl")
 include("brute.jl")
 
 end 

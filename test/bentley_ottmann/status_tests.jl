@@ -1,4 +1,4 @@
-using Test, BentleyOttmann
+using Test, SegmentIntersections
 
 @testset "Test insert segment" begin
     status = Status(3.0)
@@ -23,7 +23,7 @@ end
     segment = Segment(1,2,3,4)
     insert!(status, segment)
     segment_set = Set([Segment(10, 2, 12, 4), Segment(5,2,7,4)])
-    update!(status, segment_set)
+    update!(status, insert=segment_set, delete=Set())
     xs = collect(keys(status.dict))
     @test xs[1] ≈ 2
     @test status.dict[xs[1]] == Segment(1,2,3,4)
@@ -41,7 +41,7 @@ end
     xs = collect(keys(status.dict))
     @test xs[1] ≈ 2
     @test status.dict[xs[1]] == segment
-    delete!(status, segment)
+    update!(status, insert=Set(), delete=Set([segment]))
     @test length(status.dict) == 0
     xs = collect(keys(status.dict))
     @test length(xs) == 0
@@ -54,7 +54,7 @@ end
     status = Status(0.0)
     point = Point(11.8, 8.69)
     status.y_sweep = point.y
-    update!(status, Set([segment1, segment2, segment3]))
-    @test find_left(status, point) == segment2
-    @test find_right(status, point) == segment3
+    update!(status, insert=Set([segment1, segment2, segment3]), delete=Set())
+    @test find_left(status, point.x) == segment2
+    @test find_right(status, point.x) == segment3
 end

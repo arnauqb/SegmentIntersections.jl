@@ -1,4 +1,4 @@
-using Test, BentleyOttmann
+using Test, SegmentIntersections
 
 @testset "Test results" begin
     random_data = 100 .* rand(100, 4);

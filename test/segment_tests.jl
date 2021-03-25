@@ -1,4 +1,4 @@
-using Test, BentleyOttmann
+using Test, SegmentIntersections
 
 @testset "test segment init" begin
     s1 = Segment(1,2,3,4)
@@ -44,9 +44,13 @@ end
 @testset "Test leftmost and rightmost" begin
     segment1 = Segment(12.4, 5.56, 9.69, 2.85)
     segment2 = Segment(12.4, 5.56, 11.71, 2.61)
-    segment3 = Segment(12.4, 5.56, 13.06, 2.68, )
+    segment3 = Segment(12.4, 5.56, 13.06, 2.68)
     segment4 = Segment(12.4, 5.56, 14.55, 3.47)
     segment_set = Set([segment1, segment2, segment3, segment4])
-    @test find_leftmost(segment_set, 4) == segment1
-    @test find_rightmost(segment_set, 4) == segment4
+    segment, xmin = find_leftmost(segment_set, 4)
+    @test segment == segment1
+    @test xmin ≈  10.84
+    segment, xmax = find_rightmost(segment_set, 4)
+    @test segment == segment4
+    @test xmax ≈ 14.0 rtol=1e-2
 end

@@ -1,4 +1,4 @@
-using Test, BentleyOttmann
+using Test, SegmentIntersections
 
 @testset "Test results" begin
     segments = [

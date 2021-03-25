@@ -7,8 +7,9 @@ end
 
 Event(point::Point{T}) where {T<:Number} = Event(point, Set{Segment{T}}())
 
-Event(x::Float64, y::Float64) = Event(Point(x, y), Set())
+Event(x::Float64, y::Float64) = Event(Point(x, y), Set{Segment{Float64}}())
+Event(x::Number, y::Number) = Event(convert(Float64, x), convert(Float64, y))
 
-Base.:(==)(e1::Event, e2::Event) = e1.node == e2.node
-Base.isless(e1::Event, e2::Event) = e1.node < e2.node
+Base.:(==)(e1::Event, e2::Event) = e1.point == e2.point
+Base.isless(e1::Event, e2::Event) = e1.point < e2.point
 
